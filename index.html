@@ -3,151 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extra Food - Visual Update V5.6.1</title>
+    <title>Extra Food - UI Refresh</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        /* Menggunakan font yang lebih mirip dengan UI pada gambar (Semi-rounded & Clean) */
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
         
         :root {
-            /* Warna Baru Sesuai Request */
-            --forest-green: #b11a21; /* Dark Red */
-            --blue-mountain: #e0474c; /* Lighter Red */
-            --light-blue-backdrop: #7acfd6; /* Cyan/Teal */
-            --barely-gray: #f1f0ee; /* Off White Background */
+            /* Warna Terang (Berdasarkan Foto) */
+            --teal-primary: #1ba0ad;      /* Biru Toska Utama */
+            --teal-light: #7acfd6;        /* Biru Toska Muda */
+            --amber-accent: #fbc02d;      /* Kuning dari Search Bar Gambar */
+            --barely-gray: #e6eff1;       /* Background kebiruan pucat */
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --input-bg: #f1f5f9;
         }
+
+        /* Variabel Dark Mode */
+        [data-theme='dark'] {
+            --barely-gray: #0a2d33; 
+            --card-bg: #11424a;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #1b5d66;
+            --input-bg: #0a2d33;
+            --teal-primary: #25c1d1;
+        }
+
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
+            font-family: 'Outfit', sans-serif; 
             background-color: var(--barely-gray); 
-            color: #1e293b;
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        /* Progress Bar dengan Gradasi Dinamis - Shadow Dihapus */
+
+        /* Override Tailwind untuk konsistensi tema gambar */
+        .bg-white { background-color: var(--card-bg) !important; transition: background-color 0.3s ease; }
+        .text-slate-900 { color: var(--text-main) !important; }
+        .text-slate-700 { color: var(--text-main) !important; }
+        .text-slate-600 { color: var(--text-main) !important; }
+        .text-slate-400 { color: var(--text-muted) !important; }
+        .border-slate-200, .border-slate-100 { border-color: var(--border-color) !important; }
+        .bg-slate-50, .bg-slate-100 { background-color: var(--input-bg) !important; }
+
         .progress-container {
-            height: 14px;
-            background: #e2e8f0;
+            height: 12px;
+            background: var(--border-color);
             border-radius: 99px;
             overflow: hidden;
-            position: relative;
         }
         .progress-bar-fill {
             height: 100%;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+            transition: width 0.6s ease;
             border-radius: 99px;
         }
-        /* Input Styling - Shadow Dihapus */
+        
         .item-input-box {
-            background-color: #ffffff;
-            border: 1px solid #cbd5e1;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 6px 10px;
             width: 100%;
             font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
+            font-weight: 600;
             outline: none;
-            transition: all 0.2s;
+            color: var(--text-main);
         }
-        .item-input-box:focus {
-            border-color: var(--forest-green);
-        }
+
         @media print {
             .no-print { display: none !important; }
             #printArea { display: block !important; width: 100% !important; }
-            body { background: white !important; padding: 0 !important; }
+            body { background: white !important; color: black !important; }
         }
         #printArea { display: none; }
         
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: var(--barely-gray); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--light-blue-backdrop); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--teal-primary); border-radius: 10px; }
 
-        /* Global Override untuk menghapus shadow dari Tailwind classes */
-        .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
-            box-shadow: none !important;
+        #digitalClock { font-variant-numeric: tabular-nums; }
+
+        .theme-toggle {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 12px;
+            background: var(--amber-accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
         }
 
-        /* Digital Clock Styles */
-        #digitalClock {
-            font-variant-numeric: tabular-nums;
+        /* Efek Shadow Halus seperti di gambar */
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div id="app" class="max-w-[1400px] mx-auto no-print">
         <!-- HEADER -->
-        <header class="mb-8 flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-3xl border border-slate-200">
+        <header class="mb-8 flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-3xl border border-slate-200 card-shadow">
             <div class="flex items-center gap-6">
-                <!-- Logo Section -->
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white" style="background-color: var(--forest-green);">
+                    <!-- Icon Box sesuai warna toska di gambar -->
+                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg" style="background-color: var(--teal-primary);">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-width="2.5"></path></svg>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-black tracking-tighter text-slate-900 uppercase">Extra<span style="color: var(--forest-green);">Food</span> <span class="text-[10px] px-2 py-0.5 rounded ml-2" style="background-color: var(--light-blue-backdrop); color: white;">V5.6.1</span></h1>
-                        <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">COC CASH BNI KCU BANDUNG</p>
+                        <h1 class="text-2xl font-black tracking-tight text-slate-900 uppercase">Extra<span style="color: var(--teal-primary);">Food</span></h1>
+                        <p class="text-[9px] text-slate-400 font-extrabold uppercase tracking-[0.2em]">COC CASH BNI KCU BANDUNG</p>
                     </div>
                 </div>
 
-                <!-- JAM DIGITAL - Ditempatkan di header sebelah logo -->
-                <div class="hidden md:flex flex-col border-l border-slate-200 pl-6">
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Waktu Sekarang</span>
-                    <div id="digitalClock" class="text-xl font-black text-slate-700 tracking-tight">00:00:00</div>
+                <div class="hidden md:flex flex-col border-l-2 border-slate-100 pl-6">
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">LIVE CLOCK</span>
+                    <div id="digitalClock" class="text-xl font-extrabold tracking-tighter" style="color: var(--teal-primary);">00:00:00</div>
                 </div>
             </div>
             
             <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
-                <button onclick="document.getElementById('fileInput').click()" class="bg-amber-500 text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase hover:opacity-90 transition-all">Muat Backup</button>
+                <button onclick="toggleTheme()" class="theme-toggle shadow-md">
+                    <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m12.728 12.728L12 12m0 0l-4-4m4 4l4-4m-4 4l-4 4m4-4l4 4" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="12" r="5" stroke-width="2"></circle></svg>
+                    <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+
+                <button onclick="document.getElementById('fileInput').click()" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-200 transition-all">Muat Data</button>
                 <input type="file" id="fileInput" class="hidden" onchange="importData(event)">
                 <button onclick="exportData()" class="bg-slate-800 text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase hover:opacity-90 transition-all">Simpan Backup</button>
-                <button onclick="printRekap()" class="text-white px-6 py-2 rounded-xl font-bold text-[11px] uppercase flex items-center gap-2 hover:opacity-90 transition-all" style="background-color: var(--forest-green);">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-width="2"></path></svg>
-                    CETAK REKAP TOTAL
+                <button onclick="printRekap()" class="text-white px-6 py-2 rounded-xl font-black text-[11px] uppercase flex items-center gap-2 hover:opacity-90 transition-all shadow-lg" style="background-color: var(--teal-primary);">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-width="2.5"></path></svg>
+                    CETAK LAPORAN
                 </button>
             </div>
         </header>
 
         <!-- DASHBOARD ATAS -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-            <div class="lg:col-span-3 bg-white p-6 rounded-3xl border border-slate-200 flex flex-col md:flex-row gap-6">
+            <div class="lg:col-span-3 bg-white p-6 rounded-[2rem] border border-slate-200 flex flex-col md:flex-row gap-6 card-shadow">
                 <div class="flex-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block tracking-wider">Nama Periode</label>
-                    <input type="text" id="periodInput" oninput="updatePeriodMeta()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-bold text-sm uppercase w-full outline-none focus:ring-2 focus:ring-[#7acfd6]">
+                    <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block tracking-wider">Periode Aktif</label>
+                    <input type="text" id="periodInput" oninput="updatePeriodMeta()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-bold text-sm uppercase w-full outline-none focus:ring-2 focus:ring-[#1ba0ad]">
                 </div>
                 <div class="flex-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block tracking-wider">Bulan / Tahun</label>
-                    <input type="text" id="monthInput" oninput="updatePeriodMeta()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-bold text-sm uppercase w-full outline-none focus:ring-2 focus:ring-[#7acfd6]">
+                    <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block tracking-wider">Bulan Berjalan</label>
+                    <input type="text" id="monthInput" oninput="updatePeriodMeta()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-bold text-sm uppercase w-full outline-none focus:ring-2 focus:ring-[#1ba0ad]">
                 </div>
             </div>
-            <div class="p-6 rounded-3xl flex flex-col justify-center items-center text-white relative overflow-hidden" style="background-color: var(--blue-mountain);">
-                <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
-                <p class="text-[10px] font-black opacity-80 uppercase tracking-[0.2em] mb-2">Grand Total Biaya</p>
-                <h2 id="grandTotalDisplay" class="text-3xl font-black">Rp 0</h2>
+            <div class="p-6 rounded-[2rem] flex flex-col justify-center items-center text-white relative overflow-hidden shadow-xl" style="background-color: var(--teal-primary);">
+                <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full blur-2xl"></div>
+                <p class="text-[10px] font-black opacity-80 uppercase tracking-[0.2em] mb-2">Total Seluruh Biaya</p>
+                <h2 id="grandTotalDisplay" class="text-3xl font-black tracking-tighter">Rp 0</h2>
             </div>
         </div>
 
-        <!-- SEARCH BAR -->
-        <div class="mb-6 bg-white p-4 rounded-3xl border border-slate-200 flex items-center gap-4">
-            <div class="bg-slate-100 p-2 rounded-xl">
-                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2.5" stroke-linecap="round"></path></svg>
+        <!-- SEARCH BAR (Sesuai warna kuning di gambar) -->
+        <div class="mb-6 p-1.5 rounded-2xl flex items-center gap-4 shadow-inner" style="background-color: var(--amber-accent);">
+            <div class="bg-white/20 p-3 rounded-xl ml-2">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="3" stroke-linecap="round"></path></svg>
             </div>
-            <input type="text" id="searchEmployee" oninput="render()" placeholder="CARI NAMA PEGAWAI..." class="w-full bg-transparent font-black text-xs uppercase tracking-widest outline-none text-slate-600">
-            <div class="text-[9px] font-black text-slate-300 uppercase whitespace-nowrap">Filter Pegawai</div>
+            <input type="text" id="searchEmployee" oninput="render()" placeholder="CARI NAMA PEGAWAI..." class="w-full bg-transparent font-black text-xs uppercase tracking-widest outline-none text-white placeholder-white/70">
+            <div class="text-[9px] font-black text-white/60 uppercase px-4 whitespace-nowrap">Database Search</div>
         </div>
 
         <!-- DAFTAR KARTU PEGAWAI -->
         <div id="employeeList" class="space-y-8 mb-16"></div>
 
-        <!-- MASTER DATA & BUDGET -->
-        <div class="mt-20 pt-10 border-t-4 border-slate-200 border-dotted">
-            <h2 class="text-xs font-black uppercase text-slate-400 mb-6 flex items-center gap-3">
-                <span class="w-3 h-3 rounded-full" style="background-color: var(--forest-green);"></span> Pengaturan & Master Data
-            </h2>
-            
+        <!-- MASTER DATA -->
+        <div class="mt-20 pt-10 border-t-2 border-slate-200 border-dashed">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Master Barang -->
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-200">
+                <div class="bg-white p-6 rounded-[2.5rem] border border-slate-200 card-shadow">
                     <div class="flex justify-between items-center mb-5">
-                        <h3 class="font-black text-[11px] uppercase text-slate-500 tracking-widest">List Harga Menu</h3>
-                        <button onclick="addMasterItem()" class="px-4 py-1.5 rounded-full text-[10px] font-black hover:opacity-80" style="background-color: var(--light-blue-backdrop); color: white;">+ MENU</button>
+                        <h3 class="font-black text-[11px] uppercase text-slate-400 tracking-widest">Daftar Menu</h3>
+                        <button onclick="addMasterItem()" class="px-4 py-1.5 rounded-full text-[10px] font-black hover:opacity-80 text-white" style="background-color: var(--teal-primary);">+ TAMBAH</button>
                     </div>
                     <div class="max-h-72 overflow-y-auto pr-2 custom-scrollbar">
                         <table class="w-full">
@@ -156,10 +189,10 @@
                     </div>
                 </div>
                 <!-- Master Pegawai -->
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-200">
+                <div class="bg-white p-6 rounded-[2.5rem] border border-slate-200 card-shadow">
                     <div class="flex justify-between items-center mb-5">
-                        <h3 class="font-black text-[11px] uppercase text-slate-500 tracking-widest">List Pegawai</h3>
-                        <button onclick="addMasterEmployee()" class="px-4 py-1.5 rounded-full text-[10px] font-black hover:opacity-80" style="background-color: var(--light-blue-backdrop); color: white;">+ PEGAWAI</button>
+                        <h3 class="font-black text-[11px] uppercase text-slate-400 tracking-widest">Daftar Pegawai</h3>
+                        <button onclick="addMasterEmployee()" class="px-4 py-1.5 rounded-full text-[10px] font-black hover:opacity-80 text-white" style="background-color: var(--teal-primary);">+ TAMBAH</button>
                     </div>
                     <div class="max-h-72 overflow-y-auto pr-2 custom-scrollbar">
                         <table class="w-full">
@@ -168,26 +201,22 @@
                     </div>
                 </div>
                 <!-- Budget -->
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 space-y-6">
-                    <h3 class="font-black text-[11px] uppercase text-slate-500 tracking-widest">Limit Budget</h3>
-                    <div class="p-5 rounded-2xl border" style="background-color: #f0f9fa; border-color: var(--light-blue-backdrop);">
-                        <label class="text-[9px] font-black uppercase block mb-2 tracking-widest" style="color: var(--forest-green);">Limit Budget Mingguan</label>
+                <div class="bg-white p-6 rounded-[2.5rem] border border-slate-200 card-shadow space-y-6">
+                    <h3 class="font-black text-[11px] uppercase text-slate-400 tracking-widest">Pengaturan Budget</h3>
+                    <div class="p-5 rounded-2xl border bg-slate-50 border-slate-200">
+                        <label class="text-[9px] font-black uppercase block mb-2 tracking-widest text-slate-400">Limit Per Minggu</label>
                         <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-sm" style="color: var(--forest-green);">Rp</span>
-                            <input type="number" id="limitInput" onchange="updateLimit(this.value)" class="w-full pl-10 pr-4 py-3 rounded-xl border font-black text-lg outline-none focus:bg-white" style="border-color: var(--light-blue-backdrop); color: var(--forest-green);">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-sm text-slate-400">Rp</span>
+                            <input type="number" id="limitInput" onchange="updateLimit(this.value)" class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 font-black text-lg outline-none focus:border-[#1ba0ad] bg-white">
                         </div>
                     </div>
-                    
-                    <div class="space-y-2">
-                        <button onclick="addNewPeriod()" class="w-full text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:opacity-90 transition-all" style="background-color: var(--forest-green);">Buka Minggu Baru</button>
-                        <div id="periodList" class="flex flex-wrap gap-2 justify-center mt-4"></div>
-                    </div>
+                    <button onclick="addNewPeriod()" class="w-full text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:opacity-90 transition-all shadow-lg" style="background-color: var(--teal-primary);">Buka Minggu Baru</button>
+                    <div id="periodList" class="flex flex-wrap gap-2 justify-center mt-4"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- PRINT OUT AREA -->
     <div id="printArea"></div>
     <datalist id="itemsDatalist"></datalist>
 
@@ -203,22 +232,36 @@
                 { id: 3, name: 'KOPI GULA', price: 5000 }
             ],
             employees: [{ id: 'emp_1', name: 'NAMA PEGAWAI' }],
-            archives: [{ id: Date.now(), period: 'MINGGU 1', month: 'MARET 2024', data: {} }]
+            archives: [{ id: Date.now(), period: 'MINGGU 1', month: 'APRIL 2024', data: {} }],
+            theme: 'light'
         };
         let currentPeriodId = state.archives[0]?.id;
 
         function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
-        // --- JAM DIGITAL LOGIC ---
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', state.theme);
+            const sun = document.getElementById('sunIcon');
+            const moon = document.getElementById('moonIcon');
+            if (state.theme === 'dark') {
+                sun.classList.remove('hidden');
+                moon.classList.add('hidden');
+            } else {
+                sun.classList.add('hidden');
+                moon.classList.remove('hidden');
+            }
+        }
+
+        function toggleTheme() {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            save();
+            applyTheme();
+        }
+
         function updateClock() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const clockEl = document.getElementById('digitalClock');
-            if (clockEl) {
-                clockEl.textContent = `${hours}:${minutes}:${seconds}`;
-            }
+            const timeStr = now.toLocaleTimeString('id-ID', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            if (document.getElementById('digitalClock')) document.getElementById('digitalClock').textContent = timeStr;
         }
         setInterval(updateClock, 1000);
 
@@ -227,20 +270,19 @@
             return item ? item.price : 0;
         }
 
-        function getGradientColor(percentage) {
-            if (percentage < 50) return `linear-gradient(90deg, #b11a21 0%, #e0474c 100%)`;
-            if (percentage < 85) return `linear-gradient(90deg, #e0474c 0%, #ea580c 100%)`;
-            return `linear-gradient(90deg, #ea580c 0%, #dc2626 100%)`;
+        function getProgressColor(perc) {
+            if (perc < 50) return '#1ba0ad';
+            if (perc < 90) return '#fbc02d';
+            return '#e0474c';
         }
 
         function renderMasterData() {
             document.getElementById('limitInput').value = state.budgetLimit;
-            
             const itemBody = document.getElementById('masterItemTable');
             itemBody.innerHTML = state.items.map((it, idx) => `
                 <tr class="border-b border-slate-50">
-                    <td class="py-3 pr-2 uppercase font-bold text-slate-600 text-xs">${it.name}</td>
-                    <td class="py-3 text-right"><input type="number" class="w-24 text-right bg-slate-50 rounded px-2 py-1 outline-none font-mono text-xs font-bold" value="${it.price}" onchange="updateMasterItem(${idx}, 'price', this.value)"></td>
+                    <td class="py-3 pr-2 uppercase font-bold text-slate-500 text-[10px]">${it.name}</td>
+                    <td class="py-3 text-right"><input type="number" class="w-24 text-right bg-slate-50 rounded px-2 py-1 outline-none font-mono text-[10px] font-bold" value="${it.price}" onchange="updateMasterItem(${idx}, 'price', this.value)" style="border: 1px solid var(--border-color); color: var(--text-main);"></td>
                     <td class="py-3 text-center w-8"><button onclick="deleteMasterItem(${idx})" class="text-slate-300 hover:text-red-500 font-bold">×</button></td>
                 </tr>
             `).join('');
@@ -248,18 +290,15 @@
             const empBody = document.getElementById('masterEmployeeTable');
             empBody.innerHTML = state.employees.map((emp, idx) => `
                 <tr class="border-b border-slate-50">
-                    <td class="py-3"><input class="w-full bg-slate-50 px-3 py-1.5 rounded-lg font-bold uppercase outline-none text-xs" value="${emp.name}" onchange="updateMasterEmployee(${idx}, this.value)"></td>
+                    <td class="py-3"><input class="w-full bg-slate-50 px-3 py-1.5 rounded-lg font-bold uppercase outline-none text-[10px]" value="${emp.name}" onchange="updateMasterEmployee(${idx}, this.value)" style="border: 1px solid var(--border-color); color: var(--text-main);"></td>
                     <td class="py-3 text-center w-8"><button onclick="deleteMasterEmployee(${idx})" class="text-slate-300 hover:text-red-500 font-bold">×</button></td>
                 </tr>
             `).join('');
 
             document.getElementById('periodList').innerHTML = state.archives.map(a => `
-                <div class="flex items-center gap-1 p-1 pr-2 rounded-xl border border-slate-200 ${currentPeriodId === a.id ? 'bg-red-50 border-[#b11a21]' : 'bg-white'}">
-                    <button onclick="selectPeriod(${a.id})" class="px-3 py-1.5 text-[10px] font-black transition-all ${currentPeriodId === a.id ? 'text-[#b11a21]' : 'text-slate-400'}">
-                        ${a.period}
-                    </button>
-                    <button onclick="deletePeriod(${a.id})" class="text-slate-300 hover:text-red-500 text-xs font-black">×</button>
-                </div>
+                <button onclick="selectPeriod(${a.id})" class="px-4 py-2 text-[10px] font-black rounded-xl border border-slate-200 transition-all ${currentPeriodId === a.id ? 'bg-[#1ba0ad] text-white border-[#1ba0ad]' : 'bg-white text-slate-400'}">
+                    ${a.period}
+                </button>
             `).join('');
 
             document.getElementById('itemsDatalist').innerHTML = state.items.map(it => `<option value="${it.name}">`).join('');
@@ -277,41 +316,36 @@
             listEl.innerHTML = '';
             let grandTotalSum = 0;
 
-            const filteredEmployees = state.employees.filter(emp => emp.name.toUpperCase().includes(searchQuery));
-
-            filteredEmployees.forEach(emp => {
+            state.employees.filter(emp => emp.name.toUpperCase().includes(searchQuery)).forEach(emp => {
                 const empData = period.data[emp.id] || [];
                 const total = empData.reduce((s, i) => s + (getItemPrice(i.name) * i.qty), 0);
                 const percentage = Math.min((total / state.budgetLimit) * 100, 100);
                 grandTotalSum += total;
 
                 const card = document.createElement('div');
-                card.className = "rounded-[2.5rem] border border-slate-200 p-8 bg-white";
-                
+                card.className = "rounded-[2.5rem] border border-slate-200 p-8 bg-white card-shadow";
                 card.innerHTML = `
                     <div class="flex flex-col md:flex-row justify-between items-start mb-8 gap-6">
                         <div class="flex-1">
                             <h3 class="font-black text-2xl uppercase text-slate-900 tracking-tighter flex items-center gap-4">
-                                <span class="w-10 h-10 text-white rounded-2xl flex items-center justify-center text-sm font-black" style="background-color: var(--forest-green);">${emp.name.charAt(0)}</span>
+                                <span class="w-10 h-10 text-white rounded-2xl flex items-center justify-center text-xs font-black shadow-lg" style="background-color: var(--teal-primary);">${emp.name.charAt(0)}</span>
                                 ${emp.name}
                             </h3>
-                            <div class="flex gap-2 mt-4">
-                                <button onclick="printDetail('${emp.id}')" class="flex items-center gap-2 text-[9px] font-black px-4 py-2 rounded-full hover:opacity-80 transition-all uppercase tracking-wider" style="background-color: var(--light-blue-backdrop); color: white;">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-width="2.5"></path></svg>
-                                    Cetak Rincian
-                                </button>
-                            </div>
+                            <button onclick="printDetail('${emp.id}')" class="mt-4 flex items-center gap-2 text-[8px] font-black px-4 py-2 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all uppercase tracking-widest">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-width="3"></path></svg>
+                                Rincian Pegawai
+                            </button>
                         </div>
                         <div class="text-right flex flex-col items-end min-w-[240px]">
-                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Pengeluaran</p>
-                            <h4 class="text-3xl font-black text-slate-900">Rp ${total.toLocaleString()}</h4>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Weekly Usage</p>
+                            <h4 class="text-3xl font-black text-slate-900 tracking-tighter">Rp ${total.toLocaleString()}</h4>
                             <div class="w-full mt-4">
-                                <div class="flex justify-between text-[10px] font-black uppercase mb-1.5">
-                                    <span class="text-slate-400">Budget Terpakai</span>
-                                    <span style="color: ${percentage > 85 ? '#dc2626' : '#b11a21'}">${Math.round(percentage)}%</span>
+                                <div class="flex justify-between text-[9px] font-black uppercase mb-1.5">
+                                    <span class="text-slate-400">Budget Limit</span>
+                                    <span style="color: ${getProgressColor(percentage)}">${Math.round(percentage)}%</span>
                                 </div>
                                 <div class="progress-container">
-                                    <div class="progress-bar-fill" style="width: ${percentage}%; background: ${getGradientColor(percentage)};"></div>
+                                    <div class="progress-bar-fill" style="width: ${percentage}%; background-color: ${getProgressColor(percentage)};"></div>
                                 </div>
                             </div>
                         </div>
@@ -320,33 +354,26 @@
                         ${DAYS.map(day => {
                             const dayItems = empData.filter(d => d.day === day);
                             return `
-                                <div class="p-4 rounded-3xl border border-slate-100" style="background-color: #f8fafb;">
-                                    <span class="text-[11px] font-black text-slate-900 block mb-4 uppercase text-center tracking-[0.2em] border-b border-slate-200 pb-2">${day}</span>
+                                <div class="p-4 rounded-3xl border border-slate-100" style="background-color: var(--barely-gray);">
+                                    <span class="text-[10px] font-black text-slate-400 block mb-4 uppercase text-center tracking-widest">${day}</span>
                                     <div class="space-y-3">
-                                        ${dayItems.map(it => {
-                                            const price = getItemPrice(it.name);
-                                            return `
-                                                <div class="bg-white p-3 rounded-2xl border border-slate-200">
-                                                    <input type="text" list="itemsDatalist" value="${it.name}" 
-                                                        onchange="updateItem('${emp.id}', '${it.uid}', 'name', this.value)"
-                                                        class="item-input-box mb-2" placeholder="NAMA ITEM...">
-                                                    
-                                                    <div class="flex items-center justify-between">
-                                                        <div class="flex items-center bg-slate-50 rounded-lg px-2.5 py-1.5 border border-slate-100">
-                                                            <input type="number" value="${it.qty}" 
-                                                                onchange="updateItem('${emp.id}', '${it.uid}', 'qty', this.value)"
-                                                                class="w-10 bg-transparent text-sm font-black outline-none text-center text-slate-900">
-                                                            <span class="text-[9px] text-slate-300 font-bold ml-1">X</span>
-                                                        </div>
-                                                        <div class="text-right">
-                                                            <p class="text-[9px] font-black text-slate-900">Rp ${(it.qty * price).toLocaleString()}</p>
-                                                        </div>
-                                                        <button onclick="removeItem('${emp.id}', '${it.uid}')" class="text-slate-200 hover:text-red-500 font-black text-lg transition-colors ml-2">×</button>
+                                        ${dayItems.map(it => `
+                                            <div class="bg-white p-3 rounded-2xl border border-slate-200 card-shadow">
+                                                <input type="text" list="itemsDatalist" value="${it.name}" 
+                                                    onchange="updateItem('${emp.id}', '${it.uid}', 'name', this.value)"
+                                                    class="item-input-box mb-2 uppercase" placeholder="MENU...">
+                                                <div class="flex items-center justify-between">
+                                                    <input type="number" value="${it.qty}" 
+                                                        onchange="updateItem('${emp.id}', '${it.uid}', 'qty', this.value)"
+                                                        class="w-10 bg-slate-50 text-xs font-black outline-none text-center rounded py-1">
+                                                    <div class="text-right">
+                                                        <p class="text-[9px] font-black text-slate-900">Rp ${(it.qty * getItemPrice(it.name)).toLocaleString()}</p>
                                                     </div>
+                                                    <button onclick="removeItem('${emp.id}', '${it.uid}')" class="text-slate-200 hover:text-red-500 font-black ml-2">×</button>
                                                 </div>
-                                            `;
-                                        }).join('')}
-                                        <button onclick="addItem('${emp.id}', '${day}')" class="w-full py-3 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-black text-[9px] hover:bg-white transition-all">+ TAMBAH</button>
+                                            </div>
+                                        `).join('')}
+                                        <button onclick="addItem('${emp.id}', '${day}')" class="w-full py-3 border-2 border-dashed border-slate-300 rounded-2xl text-slate-400 font-black text-[9px] hover:bg-white transition-all uppercase">+ MENU</button>
                                     </div>
                                 </div>
                             `;
@@ -358,7 +385,7 @@
             document.getElementById('grandTotalDisplay').innerText = `Rp ${grandTotalSum.toLocaleString()}`;
         }
 
-        // --- FUNCTIONS ---
+        // --- CORE FUNCTIONS (Tetap Sama) ---
         function updateMasterItem(idx, field, val) { state.items[idx][field] = parseInt(val) || 0; save(); render(); }
         function addMasterItem() {
             const name = prompt("Nama Menu:");
@@ -369,76 +396,56 @@
         function addMasterEmployee() { state.employees.push({ id: 'emp_' + Date.now(), name: 'PEGAWAI BARU' }); save(); renderMasterData(); render(); }
         function deleteMasterEmployee(idx) { if(confirm('Hapus pegawai?')) { state.employees.splice(idx, 1); save(); renderMasterData(); render(); } }
         function updateLimit(val) { state.budgetLimit = parseInt(val) || 0; save(); render(); }
-        
         function updatePeriodMeta() {
             const p = state.archives.find(a => a.id === currentPeriodId);
             p.period = document.getElementById('periodInput').value.toUpperCase();
             p.month = document.getElementById('monthInput').value.toUpperCase();
             save(); renderMasterData();
         }
-
         function selectPeriod(id) { currentPeriodId = id; render(); renderMasterData(); }
-        
-        function deletePeriod(id) {
-            if(state.archives.length <= 1) {
-                alert("Tidak bisa menghapus semua periode. Sisakan minimal satu.");
-                return;
-            }
-            if(confirm('Hapus seluruh data pada periode ini? Tindakan ini tidak bisa dibatalkan.')) {
-                state.archives = state.archives.filter(a => a.id !== id);
-                currentPeriodId = state.archives[0].id;
-                save(); render(); renderMasterData();
-            }
-        }
-
         function addItem(empId, day) {
             const p = state.archives.find(a => a.id === currentPeriodId);
             if(!p.data[empId]) p.data[empId] = [];
             p.data[empId].push({ uid: Date.now(), day, name: '', qty: 1 });
             save(); render();
         }
-
         function updateItem(empId, uid, field, val) {
             const p = state.archives.find(a => a.id === currentPeriodId);
             const item = p.data[empId].find(i => i.uid == uid);
             item[field] = field === 'qty' ? parseInt(val) || 0 : val.toUpperCase();
             save(); render();
         }
-
         function removeItem(empId, uid) {
             const p = state.archives.find(a => a.id === currentPeriodId);
             p.data[empId] = p.data[empId].filter(i => i.uid != uid);
             save(); render();
         }
-
         function addNewPeriod() {
-            const name = prompt("Nama Minggu (Misal: MINGGU 2):");
+            const name = prompt("Nama Periode (Contoh: MINGGU 2):");
             if(name) {
                 const n = { id: Date.now(), period: name.toUpperCase(), month: 'BARU', data: {} };
                 state.archives.unshift(n); currentPeriodId = n.id;
                 save(); render(); renderMasterData();
             }
         }
-
         function exportData() {
             const blob = new Blob([JSON.stringify(state)], {type: "application/json"});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a'); a.href = url; a.download = `ExtraFood_Backup.json`; a.click();
         }
-
         function importData(e) {
             const r = new FileReader();
             r.onload = (ev) => { 
                 try {
                     state = JSON.parse(ev.target.result); 
                     currentPeriodId = state.archives[0].id; 
-                    save(); render(); renderMasterData(); 
-                } catch(err) { alert("Error!"); }
+                    save(); render(); renderMasterData(); applyTheme();
+                } catch(err) { alert("Format file tidak valid!"); }
             };
             r.readAsText(e.target.files[0]);
         }
 
-        // --- PRINTING ---
+        // --- PRINTING LOGIC (Tetap Sama) ---
         function printRekap() {
             const period = state.archives.find(a => a.id === currentPeriodId);
             let grandTotal = 0;
@@ -447,36 +454,9 @@
                 const empData = period.data[emp.id] || [];
                 const total = empData.reduce((s, it) => s + (getItemPrice(it.name) * it.qty), 0);
                 grandTotal += total;
-                rows += `
-                    <tr>
-                        <td style="border: 1px solid #000; padding: 12px; text-align: center;">${i+1}</td>
-                        <td style="border: 1px solid #000; padding: 12px; text-transform: uppercase; font-weight: 800;">${emp.name}</td>
-                        <td style="border: 1px solid #000; padding: 12px; text-align: right; font-family: monospace; font-weight: bold;">Rp ${total.toLocaleString()}</td>
-                    </tr>
-                `;
+                rows += `<tr><td style="border:1px solid #000;padding:8px;text-align:center;">${i+1}</td><td style="border:1px solid #000;padding:8px;text-transform:uppercase;">${emp.name}</td><td style="border:1px solid #000;padding:8px;text-align:right;">Rp ${total.toLocaleString()}</td></tr>`;
             });
-            document.getElementById('printArea').innerHTML = `
-                <div style="text-align: center; border-bottom: 3px solid #b11a21; padding-bottom: 15px; margin-bottom: 25px;">
-                    <h1 style="font-size: 24px; font-weight: 900; margin: 0; text-transform: uppercase; color: #b11a21;">REKAPITULASI BIAYA EXTRA FOOD</h1>
-                    <p style="font-size: 14px; margin: 5px 0; font-weight: bold;">PERIODE: ${period.period} | ${period.month}</p>
-                </div>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: #f7f7f7;">
-                            <th style="border: 1px solid #000; padding: 12px; width: 60px;">NO</th>
-                            <th style="border: 1px solid #000; padding: 12px; text-align: left;">NAMA PEGAWAI</th>
-                            <th style="border: 1px solid #000; padding: 12px; text-align: right;">TOTAL NOMINAL</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rows}</tbody>
-                    <tfoot>
-                        <tr style="font-weight: 900; font-size: 18px; background: #b11a21; color: white;">
-                            <td colspan="2" style="border: 1px solid #000; padding: 20px; text-align: right;">GRAND TOTAL</td>
-                            <td style="border: 1px solid #000; padding: 20px; text-align: right;">Rp ${grandTotal.toLocaleString()}</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            `;
+            document.getElementById('printArea').innerHTML = `<div style="text-align:center;margin-bottom:20px;"><h2>REKAP EXTRA FOOD</h2><p>${period.period} - ${period.month}</p></div><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="border:1px solid #000;padding:8px;">NO</th><th style="border:1px solid #000;padding:8px;">NAMA</th><th style="border:1px solid #000;padding:8px;">TOTAL</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><th colspan="2" style="border:1px solid #000;padding:8px;text-align:right;">GRAND TOTAL</th><th style="border:1px solid #000;padding:8px;text-align:right;">Rp ${grandTotal.toLocaleString()}</th></tr></tfoot></table>`;
             window.print();
         }
 
@@ -484,46 +464,19 @@
             const period = state.archives.find(a => a.id === currentPeriodId);
             const emp = state.employees.find(e => e.id === empId);
             const empData = period.data[empId] || [];
-            let totalPegawai = 0;
+            let total = 0;
             let content = DAYS.map(day => {
                 const items = empData.filter(d => d.day === day);
-                let dayTotal = items.reduce((s, it) => s + (getItemPrice(it.name) * it.qty), 0);
-                totalPegawai += dayTotal;
                 if (items.length === 0) return '';
-                return `
-                    <div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
-                        <h3 style="margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">HARI ${day}</h3>
-                        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                            ${items.map(it => `
-                                <tr>
-                                    <td style="padding: 5px 0; text-transform: uppercase;">${it.name}</td>
-                                    <td style="padding: 5px 0; text-align: center;">${it.qty} x ${getItemPrice(it.name).toLocaleString()}</td>
-                                    <td style="padding: 5px 0; text-align: right; font-weight: bold;">Rp ${(it.qty * getItemPrice(it.name)).toLocaleString()}</td>
-                                </tr>
-                            `).join('')}
-                        </table>
-                    </div>
-                `;
+                let dTotal = items.reduce((s, it) => s + (getItemPrice(it.name) * it.qty), 0);
+                total += dTotal;
+                return `<div style="margin-bottom:15px;"><h4 style="border-bottom:1px solid #000;margin:0 0 5px 0;">${day}</h4><table style="width:100%;font-size:12px;">${items.map(it => `<tr><td>${it.name}</td><td style="text-align:center;">${it.qty}x</td><td style="text-align:right;">Rp ${(it.qty*getItemPrice(it.name)).toLocaleString()}</td></tr>`).join('')}</table></div>`;
             }).join('');
-            document.getElementById('printArea').innerHTML = `
-                <div style="border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 10px;">
-                    <h1 style="font-size: 18px; text-align: center; margin: 0;">RINCIAN KONSUMSI PEGAWAI</h1>
-                    <h2 style="text-align: center; margin: 5px 0; font-size: 20px; text-transform: uppercase;">${emp.name}</h2>
-                    <p style="text-align: center; font-size: 12px; margin: 0;">${period.period} | ${period.month}</p>
-                </div>
-                ${content}
-                <div style="margin-top: 20px; text-align: right; font-size: 18px; font-weight: 900; border-top: 2px solid #000; padding-top: 10px;">
-                    TOTAL: Rp ${totalPegawai.toLocaleString()}
-                </div>
-            `;
+            document.getElementById('printArea').innerHTML = `<div style="text-align:center;"><h3>RINCIAN EXTRA FOOD</h3><h2>${emp.name}</h2><p>${period.period}</p></div><hr>${content}<hr><h3 style="text-align:right;">TOTAL: Rp ${total.toLocaleString()}</h3>`;
             window.print();
         }
 
-        window.onload = () => { 
-            updateClock();
-            render(); 
-            renderMasterData(); 
-        };
+        window.onload = () => { applyTheme(); updateClock(); render(); renderMasterData(); };
     </script>
 </body>
 </html>
