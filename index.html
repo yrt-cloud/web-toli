@@ -9,31 +9,31 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
         
         :root {
-            --forest-green: #3d7c47;
-            --blue-mountain: #09868b;
-            --light-blue-backdrop: #76c1d4;
-            --barely-gray: #f7f7f7;
+            /* Warna Baru Sesuai Request */
+            --forest-green: #b11a21; /* Dark Red */
+            --blue-mountain: #e0474c; /* Lighter Red */
+            --light-blue-backdrop: #7acfd6; /* Cyan/Teal */
+            --barely-gray: #f1f0ee; /* Off White Background */
         }
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background-color: var(--barely-gray); 
             color: #1e293b;
         }
-        /* Progress Bar dengan Gradasi Dinamis */
+        /* Progress Bar dengan Gradasi Dinamis - Shadow Dihapus */
         .progress-container {
             height: 14px;
             background: #e2e8f0;
             border-radius: 99px;
             overflow: hidden;
             position: relative;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .progress-bar-fill {
             height: 100%;
             transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
             border-radius: 99px;
         }
-        /* Input Styling */
+        /* Input Styling - Shadow Dihapus */
         .item-input-box {
             background-color: #ffffff;
             border: 1px solid #cbd5e1;
@@ -48,7 +48,6 @@
         }
         .item-input-box:focus {
             border-color: var(--forest-green);
-            box-shadow: 0 0 0 3px rgba(61, 124, 71, 0.1);
         }
         @media print {
             .no-print { display: none !important; }
@@ -60,19 +59,38 @@
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: var(--barely-gray); }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--light-blue-backdrop); border-radius: 10px; }
+
+        /* Global Override untuk menghapus shadow dari Tailwind classes */
+        .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+            box-shadow: none !important;
+        }
+
+        /* Digital Clock Styles */
+        #digitalClock {
+            font-variant-numeric: tabular-nums;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div id="app" class="max-w-[1400px] mx-auto no-print">
         <!-- HEADER -->
-        <header class="mb-8 flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg" style="background-color: var(--forest-green);">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-width="2.5"></path></svg>
+        <header class="mb-8 flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-3xl border border-slate-200">
+            <div class="flex items-center gap-6">
+                <!-- Logo Section -->
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white" style="background-color: var(--forest-green);">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-width="2.5"></path></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter text-slate-900 uppercase">Extra<span style="color: var(--forest-green);">Food</span> <span class="text-[10px] px-2 py-0.5 rounded ml-2" style="background-color: var(--light-blue-backdrop); color: white;">V5.6.1</span></h1>
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">COC CASH BNI KCU BANDUNG</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-2xl font-black tracking-tighter text-slate-900 uppercase">Extra<span style="color: var(--forest-green);">Food</span> <span class="text-[10px] px-2 py-0.5 rounded ml-2" style="background-color: var(--light-blue-backdrop); color: white;">V5.6.1</span></h1>
-                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">COC CASH BNI KCU BANDUNG</p>
+
+                <!-- JAM DIGITAL - Ditempatkan di header sebelah logo -->
+                <div class="hidden md:flex flex-col border-l border-slate-200 pl-6">
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Waktu Sekarang</span>
+                    <div id="digitalClock" class="text-xl font-black text-slate-700 tracking-tight">00:00:00</div>
                 </div>
             </div>
             
@@ -80,7 +98,7 @@
                 <button onclick="document.getElementById('fileInput').click()" class="bg-amber-500 text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase hover:opacity-90 transition-all">Muat Backup</button>
                 <input type="file" id="fileInput" class="hidden" onchange="importData(event)">
                 <button onclick="exportData()" class="bg-slate-800 text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase hover:opacity-90 transition-all">Simpan Backup</button>
-                <button onclick="printRekap()" class="text-white px-6 py-2 rounded-xl font-bold text-[11px] uppercase shadow-xl flex items-center gap-2 hover:opacity-90 transition-all" style="background-color: var(--forest-green);">
+                <button onclick="printRekap()" class="text-white px-6 py-2 rounded-xl font-bold text-[11px] uppercase flex items-center gap-2 hover:opacity-90 transition-all" style="background-color: var(--forest-green);">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-width="2"></path></svg>
                     CETAK REKAP TOTAL
                 </button>
@@ -92,14 +110,14 @@
             <div class="lg:col-span-3 bg-white p-6 rounded-3xl border border-slate-200 flex flex-col md:flex-row gap-6">
                 <div class="flex-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block tracking-wider">Nama Periode</label>
-                    <input type="text" id="periodInput" oninput="updatePeriodMeta()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-bold text-sm uppercase w-full outline-none focus:ring-2 focus:ring-[#76c1d4]">
+                    <input type="text" id="periodInput" oninput="updatePeriodMeta()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-bold text-sm uppercase w-full outline-none focus:ring-2 focus:ring-[#7acfd6]">
                 </div>
                 <div class="flex-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block tracking-wider">Bulan / Tahun</label>
-                    <input type="text" id="monthInput" oninput="updatePeriodMeta()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-bold text-sm uppercase w-full outline-none focus:ring-2 focus:ring-[#76c1d4]">
+                    <input type="text" id="monthInput" oninput="updatePeriodMeta()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-bold text-sm uppercase w-full outline-none focus:ring-2 focus:ring-[#7acfd6]">
                 </div>
             </div>
-            <div class="p-6 rounded-3xl shadow-2xl flex flex-col justify-center items-center text-white relative overflow-hidden" style="background-color: var(--blue-mountain);">
+            <div class="p-6 rounded-3xl flex flex-col justify-center items-center text-white relative overflow-hidden" style="background-color: var(--blue-mountain);">
                 <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
                 <p class="text-[10px] font-black opacity-80 uppercase tracking-[0.2em] mb-2">Grand Total Biaya</p>
                 <h2 id="grandTotalDisplay" class="text-3xl font-black">Rp 0</h2>
@@ -126,7 +144,7 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Master Barang -->
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm">
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-200">
                     <div class="flex justify-between items-center mb-5">
                         <h3 class="font-black text-[11px] uppercase text-slate-500 tracking-widest">List Harga Menu</h3>
                         <button onclick="addMasterItem()" class="px-4 py-1.5 rounded-full text-[10px] font-black hover:opacity-80" style="background-color: var(--light-blue-backdrop); color: white;">+ MENU</button>
@@ -138,7 +156,7 @@
                     </div>
                 </div>
                 <!-- Master Pegawai -->
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm">
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-200">
                     <div class="flex justify-between items-center mb-5">
                         <h3 class="font-black text-[11px] uppercase text-slate-500 tracking-widest">List Pegawai</h3>
                         <button onclick="addMasterEmployee()" class="px-4 py-1.5 rounded-full text-[10px] font-black hover:opacity-80" style="background-color: var(--light-blue-backdrop); color: white;">+ PEGAWAI</button>
@@ -150,18 +168,18 @@
                     </div>
                 </div>
                 <!-- Budget -->
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm space-y-6">
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 space-y-6">
                     <h3 class="font-black text-[11px] uppercase text-slate-500 tracking-widest">Limit Budget</h3>
                     <div class="p-5 rounded-2xl border" style="background-color: #f0f9fa; border-color: var(--light-blue-backdrop);">
-                        <label class="text-[9px] font-black uppercase block mb-2 tracking-widest" style="color: var(--blue-mountain);">Limit Budget Mingguan</label>
+                        <label class="text-[9px] font-black uppercase block mb-2 tracking-widest" style="color: var(--forest-green);">Limit Budget Mingguan</label>
                         <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-sm" style="color: var(--blue-mountain);">Rp</span>
-                            <input type="number" id="limitInput" onchange="updateLimit(this.value)" class="w-full pl-10 pr-4 py-3 rounded-xl border font-black text-lg outline-none focus:bg-white" style="border-color: var(--light-blue-backdrop); color: var(--blue-mountain);">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-sm" style="color: var(--forest-green);">Rp</span>
+                            <input type="number" id="limitInput" onchange="updateLimit(this.value)" class="w-full pl-10 pr-4 py-3 rounded-xl border font-black text-lg outline-none focus:bg-white" style="border-color: var(--light-blue-backdrop); color: var(--forest-green);">
                         </div>
                     </div>
                     
                     <div class="space-y-2">
-                        <button onclick="addNewPeriod()" class="w-full text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:opacity-90 transition-all shadow-lg" style="background-color: var(--forest-green);">Buka Minggu Baru</button>
+                        <button onclick="addNewPeriod()" class="w-full text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:opacity-90 transition-all" style="background-color: var(--forest-green);">Buka Minggu Baru</button>
                         <div id="periodList" class="flex flex-wrap gap-2 justify-center mt-4"></div>
                     </div>
                 </div>
@@ -176,6 +194,7 @@
     <script>
         const STORAGE_KEY = 'extra_food_v56_data';
         const DAYS = ['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT'];
+        
         let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
             budgetLimit: 125000,
             items: [
@@ -190,14 +209,27 @@
 
         function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
+        // --- JAM DIGITAL LOGIC ---
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const clockEl = document.getElementById('digitalClock');
+            if (clockEl) {
+                clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+        }
+        setInterval(updateClock, 1000);
+
         function getItemPrice(name) {
             const item = state.items.find(i => i.name === name.toUpperCase().trim());
             return item ? item.price : 0;
         }
 
         function getGradientColor(percentage) {
-            if (percentage < 50) return `linear-gradient(90deg, #3d7c47 0%, #f59e0b 100%)`;
-            if (percentage < 85) return `linear-gradient(90deg, #f59e0b 0%, #ea580c 100%)`;
+            if (percentage < 50) return `linear-gradient(90deg, #b11a21 0%, #e0474c 100%)`;
+            if (percentage < 85) return `linear-gradient(90deg, #e0474c 0%, #ea580c 100%)`;
             return `linear-gradient(90deg, #ea580c 0%, #dc2626 100%)`;
         }
 
@@ -222,8 +254,8 @@
             `).join('');
 
             document.getElementById('periodList').innerHTML = state.archives.map(a => `
-                <div class="flex items-center gap-1 p-1 pr-2 rounded-xl border border-slate-200 ${currentPeriodId === a.id ? 'bg-emerald-50 border-emerald-500' : 'bg-white'}">
-                    <button onclick="selectPeriod(${a.id})" class="px-3 py-1.5 text-[10px] font-black transition-all ${currentPeriodId === a.id ? 'text-emerald-700' : 'text-slate-400'}">
+                <div class="flex items-center gap-1 p-1 pr-2 rounded-xl border border-slate-200 ${currentPeriodId === a.id ? 'bg-red-50 border-[#b11a21]' : 'bg-white'}">
+                    <button onclick="selectPeriod(${a.id})" class="px-3 py-1.5 text-[10px] font-black transition-all ${currentPeriodId === a.id ? 'text-[#b11a21]' : 'text-slate-400'}">
                         ${a.period}
                     </button>
                     <button onclick="deletePeriod(${a.id})" class="text-slate-300 hover:text-red-500 text-xs font-black">×</button>
@@ -254,13 +286,13 @@
                 grandTotalSum += total;
 
                 const card = document.createElement('div');
-                card.className = "rounded-[2.5rem] border border-slate-200 p-8 shadow-sm bg-white";
+                card.className = "rounded-[2.5rem] border border-slate-200 p-8 bg-white";
                 
                 card.innerHTML = `
                     <div class="flex flex-col md:flex-row justify-between items-start mb-8 gap-6">
                         <div class="flex-1">
                             <h3 class="font-black text-2xl uppercase text-slate-900 tracking-tighter flex items-center gap-4">
-                                <span class="w-10 h-10 text-white rounded-2xl flex items-center justify-center text-sm font-black shadow-md" style="background-color: var(--forest-green);">${emp.name.charAt(0)}</span>
+                                <span class="w-10 h-10 text-white rounded-2xl flex items-center justify-center text-sm font-black" style="background-color: var(--forest-green);">${emp.name.charAt(0)}</span>
                                 ${emp.name}
                             </h3>
                             <div class="flex gap-2 mt-4">
@@ -276,7 +308,7 @@
                             <div class="w-full mt-4">
                                 <div class="flex justify-between text-[10px] font-black uppercase mb-1.5">
                                     <span class="text-slate-400">Budget Terpakai</span>
-                                    <span style="color: ${percentage > 85 ? '#dc2626' : '#3d7c47'}">${Math.round(percentage)}%</span>
+                                    <span style="color: ${percentage > 85 ? '#dc2626' : '#b11a21'}">${Math.round(percentage)}%</span>
                                 </div>
                                 <div class="progress-container">
                                     <div class="progress-bar-fill" style="width: ${percentage}%; background: ${getGradientColor(percentage)};"></div>
@@ -294,7 +326,7 @@
                                         ${dayItems.map(it => {
                                             const price = getItemPrice(it.name);
                                             return `
-                                                <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                                                <div class="bg-white p-3 rounded-2xl border border-slate-200">
                                                     <input type="text" list="itemsDatalist" value="${it.name}" 
                                                         onchange="updateItem('${emp.id}', '${it.uid}', 'name', this.value)"
                                                         class="item-input-box mb-2" placeholder="NAMA ITEM...">
@@ -424,8 +456,8 @@
                 `;
             });
             document.getElementById('printArea').innerHTML = `
-                <div style="text-align: center; border-bottom: 3px solid #3d7c47; padding-bottom: 15px; margin-bottom: 25px;">
-                    <h1 style="font-size: 24px; font-weight: 900; margin: 0; text-transform: uppercase; color: #3d7c47;">REKAPITULASI BIAYA EXTRA FOOD</h1>
+                <div style="text-align: center; border-bottom: 3px solid #b11a21; padding-bottom: 15px; margin-bottom: 25px;">
+                    <h1 style="font-size: 24px; font-weight: 900; margin: 0; text-transform: uppercase; color: #b11a21;">REKAPITULASI BIAYA EXTRA FOOD</h1>
                     <p style="font-size: 14px; margin: 5px 0; font-weight: bold;">PERIODE: ${period.period} | ${period.month}</p>
                 </div>
                 <table style="width: 100%; border-collapse: collapse;">
@@ -438,7 +470,7 @@
                     </thead>
                     <tbody>${rows}</tbody>
                     <tfoot>
-                        <tr style="font-weight: 900; font-size: 18px; background: #3d7c47; color: white;">
+                        <tr style="font-weight: 900; font-size: 18px; background: #b11a21; color: white;">
                             <td colspan="2" style="border: 1px solid #000; padding: 20px; text-align: right;">GRAND TOTAL</td>
                             <td style="border: 1px solid #000; padding: 20px; text-align: right;">Rp ${grandTotal.toLocaleString()}</td>
                         </tr>
@@ -487,7 +519,11 @@
             window.print();
         }
 
-        window.onload = () => { render(); renderMasterData(); };
+        window.onload = () => { 
+            updateClock();
+            render(); 
+            renderMasterData(); 
+        };
     </script>
 </body>
 </html>
