@@ -10,7 +10,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
         
         :root {
-            /* Warna Terang (Berdasarkan Foto) */
             --teal-primary: #1ba0ad;      /* Biru Toska Utama */
             --teal-light: #7acfd6;        /* Biru Toska Muda */
             --amber-accent: #fbc02d;      /* Kuning dari Search Bar Gambar */
@@ -22,7 +21,6 @@
             --input-bg: #f1f5f9;
         }
 
-        /* Variabel Dark Mode */
         [data-theme='dark'] {
             --barely-gray: #0a2d33; 
             --card-bg: #11424a;
@@ -40,7 +38,6 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Override Tailwind untuk konsistensi tema gambar */
         .bg-white { background-color: var(--card-bg) !important; transition: background-color 0.3s ease; }
         .text-slate-900 { color: var(--text-main) !important; }
         .text-slate-700 { color: var(--text-main) !important; }
@@ -98,7 +95,6 @@
             transition: all 0.2s;
         }
 
-        /* Efek Shadow Halus seperti di gambar */
         .card-shadow {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
@@ -110,9 +106,8 @@
         <header class="mb-8 flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-3xl border border-slate-200 card-shadow">
             <div class="flex items-center gap-6">
                 <div class="flex items-center gap-4">
-                    <!-- Icon Box sesuai warna toska di gambar -->
                     <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg" style="background-color: var(--teal-primary);">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-width="2.5"></path></svg>
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2H2m9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-width="2.5"></path></svg>
                     </div>
                     <div>
                         <h1 class="text-2xl font-black tracking-tight text-slate-900 uppercase">Extra<span style="color: var(--teal-primary);">Food</span></h1>
@@ -161,7 +156,7 @@
             </div>
         </div>
 
-        <!-- SEARCH BAR (Sesuai warna kuning di gambar) -->
+        <!-- SEARCH BAR -->
         <div class="mb-6 p-1.5 rounded-2xl flex items-center gap-4 shadow-inner" style="background-color: var(--amber-accent);">
             <div class="bg-white/20 p-3 rounded-xl ml-2">
                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="3" stroke-linecap="round"></path></svg>
@@ -204,7 +199,7 @@
                 <div class="bg-white p-6 rounded-[2.5rem] border border-slate-200 card-shadow space-y-6">
                     <h3 class="font-black text-[11px] uppercase text-slate-400 tracking-widest">Pengaturan Budget</h3>
                     <div class="p-5 rounded-2xl border bg-slate-50 border-slate-200">
-                        <label class="text-[9px] font-black uppercase block mb-2 tracking-widest text-slate-400">Limit Per Minggu</label>
+                        <label class="text-[9px] font-black uppercase block mb-2 tracking-widest text-slate-400">Limit Per Minggu (Periode Ini)</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-sm text-slate-400">Rp</span>
                             <input type="number" id="limitInput" onchange="updateLimit(this.value)" class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 font-black text-lg outline-none focus:border-[#1ba0ad] bg-white">
@@ -221,18 +216,19 @@
     <datalist id="itemsDatalist"></datalist>
 
     <script>
-        const STORAGE_KEY = 'extra_food_v56_data';
+        const STORAGE_KEY = 'extra_food_v57_data';
         const DAYS = ['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT'];
         
         let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-            budgetLimit: 125000,
+            // Kita tetap simpan global default untuk periode baru nantinya
+            defaultBudgetLimit: 125000, 
             items: [
                 { id: 1, name: 'NASI KOTAK', price: 25000 },
                 { id: 2, name: 'SNACK BOX', price: 15000 },
                 { id: 3, name: 'KOPI GULA', price: 5000 }
             ],
-            employees: [{ id: 'emp_1', name: 'NAMA PEGAWAI' }],
-            archives: [{ id: Date.now(), period: 'MINGGU 1', month: 'APRIL 2024', data: {} }],
+            employees: [{ id: 'emp_1', name: 'EMAN SUHERMAN' }],
+            archives: [{ id: Date.now(), period: 'MINGGU 1', month: 'APRIL 2026', data: {}, budgetLimit: 125000 }],
             theme: 'light'
         };
         let currentPeriodId = state.archives[0]?.id;
@@ -277,7 +273,10 @@
         }
 
         function renderMasterData() {
-            document.getElementById('limitInput').value = state.budgetLimit;
+            const currentPeriod = state.archives.find(a => a.id === currentPeriodId);
+            // Ambil limit dari periode aktif, jika tidak ada fallback ke default
+            document.getElementById('limitInput').value = currentPeriod.budgetLimit || state.defaultBudgetLimit;
+            
             const itemBody = document.getElementById('masterItemTable');
             itemBody.innerHTML = state.items.map((it, idx) => `
                 <tr class="border-b border-slate-50">
@@ -308,6 +307,9 @@
             const period = state.archives.find(a => a.id === currentPeriodId);
             if(!period) return;
 
+            // Pastikan periode lama memiliki limit jika belum ada (migrasi data lama)
+            if(!period.budgetLimit) period.budgetLimit = state.defaultBudgetLimit || 125000;
+
             document.getElementById('periodInput').value = period.period || "";
             document.getElementById('monthInput').value = period.month || "";
 
@@ -319,7 +321,8 @@
             state.employees.filter(emp => emp.name.toUpperCase().includes(searchQuery)).forEach(emp => {
                 const empData = period.data[emp.id] || [];
                 const total = empData.reduce((s, i) => s + (getItemPrice(i.name) * i.qty), 0);
-                const percentage = Math.min((total / state.budgetLimit) * 100, 100);
+                const remaining = Math.max(period.budgetLimit - total, 0);
+                const percentage = Math.min((total / period.budgetLimit) * 100, 100);
                 grandTotalSum += total;
 
                 const card = document.createElement('div');
@@ -336,12 +339,20 @@
                                 Rincian Pegawai
                             </button>
                         </div>
-                        <div class="text-right flex flex-col items-end min-w-[240px]">
-                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Weekly Usage</p>
-                            <h4 class="text-3xl font-black text-slate-900 tracking-tighter">Rp ${total.toLocaleString()}</h4>
-                            <div class="w-full mt-4">
+                        <div class="text-right flex flex-col items-end min-w-[320px] w-full md:w-auto">
+                            <div class="flex w-full mb-2">
+                                <div class="flex-1 text-left pr-4">
+                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Weekly Usage</p>
+                                    <h4 class="text-2xl font-black text-slate-900 tracking-tighter">Rp ${total.toLocaleString()}</h4>
+                                </div>
+                                <div class="flex-1 text-right pl-4 border-l-2 border-slate-100">
+                                    <p class="text-[9px] font-black text-teal-500 uppercase tracking-widest mb-1">Sisa Saldo</p>
+                                    <h4 class="text-xl font-black text-teal-600 tracking-tighter">Rp ${remaining.toLocaleString()}</h4>
+                                </div>
+                            </div>
+                            <div class="w-full mt-2">
                                 <div class="flex justify-between text-[9px] font-black uppercase mb-1.5">
-                                    <span class="text-slate-400">Budget Limit</span>
+                                    <span class="text-slate-400">Budget Limit (Rp ${period.budgetLimit.toLocaleString()})</span>
                                     <span style="color: ${getProgressColor(percentage)}">${Math.round(percentage)}%</span>
                                 </div>
                                 <div class="progress-container">
@@ -385,7 +396,7 @@
             document.getElementById('grandTotalDisplay').innerText = `Rp ${grandTotalSum.toLocaleString()}`;
         }
 
-        // --- CORE FUNCTIONS (Tetap Sama) ---
+        // --- CORE FUNCTIONS ---
         function updateMasterItem(idx, field, val) { state.items[idx][field] = parseInt(val) || 0; save(); render(); }
         function addMasterItem() {
             const name = prompt("Nama Menu:");
@@ -395,7 +406,19 @@
         function updateMasterEmployee(idx, val) { state.employees[idx].name = val.toUpperCase(); save(); render(); }
         function addMasterEmployee() { state.employees.push({ id: 'emp_' + Date.now(), name: 'PEGAWAI BARU' }); save(); renderMasterData(); render(); }
         function deleteMasterEmployee(idx) { if(confirm('Hapus pegawai?')) { state.employees.splice(idx, 1); save(); renderMasterData(); render(); } }
-        function updateLimit(val) { state.budgetLimit = parseInt(val) || 0; save(); render(); }
+        
+        // UPDATE LIMIT HANYA UNTUK PERIODE AKTIF
+        function updateLimit(val) { 
+            const period = state.archives.find(a => a.id === currentPeriodId);
+            const numVal = parseInt(val) || 0;
+            if(period) {
+                period.budgetLimit = numVal;
+                // Update default agar periode baru berikutnya pakai limit ini
+                state.defaultBudgetLimit = numVal; 
+            }
+            save(); render(); 
+        }
+
         function updatePeriodMeta() {
             const p = state.archives.find(a => a.id === currentPeriodId);
             p.period = document.getElementById('periodInput').value.toUpperCase();
@@ -423,7 +446,14 @@
         function addNewPeriod() {
             const name = prompt("Nama Periode (Contoh: MINGGU 2):");
             if(name) {
-                const n = { id: Date.now(), period: name.toUpperCase(), month: 'BARU', data: {} };
+                // Saat buat periode baru, salin budget limit saat ini ke dalam objek archives tersebut
+                const n = { 
+                    id: Date.now(), 
+                    period: name.toUpperCase(), 
+                    month: 'BARU', 
+                    data: {},
+                    budgetLimit: state.defaultBudgetLimit // Simpan secara permanen di periode ini
+                };
                 state.archives.unshift(n); currentPeriodId = n.id;
                 save(); render(); renderMasterData();
             }
@@ -445,7 +475,6 @@
             r.readAsText(e.target.files[0]);
         }
 
-        // --- PRINTING LOGIC (Tetap Sama) ---
         function printRekap() {
             const period = state.archives.find(a => a.id === currentPeriodId);
             let grandTotal = 0;
