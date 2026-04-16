@@ -161,7 +161,7 @@
             <div class="bg-white/20 p-3 rounded-xl ml-2">
                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="3" stroke-linecap="round"></path></svg>
             </div>
-            <input type="text" id="searchEmployee" oninput="render()" placeholder="CARI NAMA PEGAWAI..." class="w-full bg-transparent font-black text-xs uppercase tracking-widest outline-none text-white placeholder-white/70">
+            <input type="text" id="searchEmployee" oninput="render()" placeholder="CARI NAMA PEGAWAI PADA KARTU..." class="w-full bg-transparent font-black text-xs uppercase tracking-widest outline-none text-white placeholder-white/70">
             <div class="text-[9px] font-black text-white/60 uppercase px-4 whitespace-nowrap">Database Search</div>
         </div>
 
@@ -177,6 +177,10 @@
                         <h3 class="font-black text-[11px] uppercase text-slate-400 tracking-widest">Daftar Menu</h3>
                         <button onclick="addMasterItem()" class="px-4 py-1.5 rounded-full text-[10px] font-black hover:opacity-80 text-white" style="background-color: var(--teal-primary);">+ TAMBAH</button>
                     </div>
+                    <!-- SEARCH MENU -->
+                    <div class="mb-4">
+                        <input type="text" id="searchMasterItem" oninput="renderMasterData()" placeholder="Cari menu..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-[10px] font-bold uppercase outline-none focus:ring-1 focus:ring-[#1ba0ad]">
+                    </div>
                     <div class="max-h-72 overflow-y-auto pr-2 custom-scrollbar">
                         <table class="w-full">
                             <tbody id="masterItemTable"></tbody>
@@ -188,6 +192,10 @@
                     <div class="flex justify-between items-center mb-5">
                         <h3 class="font-black text-[11px] uppercase text-slate-400 tracking-widest">Daftar Pegawai</h3>
                         <button onclick="addMasterEmployee()" class="px-4 py-1.5 rounded-full text-[10px] font-black hover:opacity-80 text-white" style="background-color: var(--teal-primary);">+ TAMBAH</button>
+                    </div>
+                    <!-- SEARCH PEGAWAI -->
+                    <div class="mb-4">
+                        <input type="text" id="searchMasterEmployee" oninput="renderMasterData()" placeholder="Cari pegawai..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-[10px] font-bold uppercase outline-none focus:ring-1 focus:ring-[#1ba0ad]">
                     </div>
                     <div class="max-h-72 overflow-y-auto pr-2 custom-scrollbar">
                         <table class="w-full">
@@ -220,7 +228,6 @@
         const DAYS = ['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT'];
         
         let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-            // Kita tetap simpan global default untuk periode baru nantinya
             defaultBudgetLimit: 125000, 
             items: [
                 { id: 1, name: 'NASI KOTAK', price: 25000 },
@@ -274,25 +281,38 @@
 
         function renderMasterData() {
             const currentPeriod = state.archives.find(a => a.id === currentPeriodId);
-            // Ambil limit dari periode aktif, jika tidak ada fallback ke default
             document.getElementById('limitInput').value = currentPeriod.budgetLimit || state.defaultBudgetLimit;
             
+            // Pencarian Menu
+            const qItem = (document.getElementById('searchMasterItem').value || "").toUpperCase();
+            const filteredItems = state.items.filter(it => it.name.includes(qItem));
+
             const itemBody = document.getElementById('masterItemTable');
-            itemBody.innerHTML = state.items.map((it, idx) => `
-                <tr class="border-b border-slate-50">
-                    <td class="py-3 pr-2 uppercase font-bold text-slate-500 text-[10px]">${it.name}</td>
-                    <td class="py-3 text-right"><input type="number" class="w-24 text-right bg-slate-50 rounded px-2 py-1 outline-none font-mono text-[10px] font-bold" value="${it.price}" onchange="updateMasterItem(${idx}, 'price', this.value)" style="border: 1px solid var(--border-color); color: var(--text-main);"></td>
-                    <td class="py-3 text-center w-8"><button onclick="deleteMasterItem(${idx})" class="text-slate-300 hover:text-red-500 font-bold">×</button></td>
-                </tr>
-            `).join('');
+            itemBody.innerHTML = filteredItems.map((it) => {
+                const originalIdx = state.items.findIndex(original => original.id === it.id);
+                return `
+                    <tr class="border-b border-slate-50">
+                        <td class="py-3 pr-2 uppercase font-bold text-slate-500 text-[10px]">${it.name}</td>
+                        <td class="py-3 text-right"><input type="number" class="w-24 text-right bg-slate-50 rounded px-2 py-1 outline-none font-mono text-[10px] font-bold" value="${it.price}" onchange="updateMasterItem(${originalIdx}, 'price', this.value)" style="border: 1px solid var(--border-color); color: var(--text-main);"></td>
+                        <td class="py-3 text-center w-8"><button onclick="deleteMasterItem(${originalIdx})" class="text-slate-300 hover:text-red-500 font-bold">×</button></td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Pencarian Pegawai
+            const qEmp = (document.getElementById('searchMasterEmployee').value || "").toUpperCase();
+            const filteredEmps = state.employees.filter(e => e.name.includes(qEmp));
 
             const empBody = document.getElementById('masterEmployeeTable');
-            empBody.innerHTML = state.employees.map((emp, idx) => `
-                <tr class="border-b border-slate-50">
-                    <td class="py-3"><input class="w-full bg-slate-50 px-3 py-1.5 rounded-lg font-bold uppercase outline-none text-[10px]" value="${emp.name}" onchange="updateMasterEmployee(${idx}, this.value)" style="border: 1px solid var(--border-color); color: var(--text-main);"></td>
-                    <td class="py-3 text-center w-8"><button onclick="deleteMasterEmployee(${idx})" class="text-slate-300 hover:text-red-500 font-bold">×</button></td>
-                </tr>
-            `).join('');
+            empBody.innerHTML = filteredEmps.map((emp) => {
+                const originalIdx = state.employees.findIndex(original => original.id === emp.id);
+                return `
+                    <tr class="border-b border-slate-50">
+                        <td class="py-3"><input class="w-full bg-slate-50 px-3 py-1.5 rounded-lg font-bold uppercase outline-none text-[10px]" value="${emp.name}" onchange="updateMasterEmployee(${originalIdx}, this.value)" style="border: 1px solid var(--border-color); color: var(--text-main);"></td>
+                        <td class="py-3 text-center w-8"><button onclick="deleteMasterEmployee(${originalIdx})" class="text-slate-300 hover:text-red-500 font-bold">×</button></td>
+                    </tr>
+                `;
+            }).join('');
 
             document.getElementById('periodList').innerHTML = state.archives.map(a => `
                 <button onclick="selectPeriod(${a.id})" class="px-4 py-2 text-[10px] font-black rounded-xl border border-slate-200 transition-all ${currentPeriodId === a.id ? 'bg-[#1ba0ad] text-white border-[#1ba0ad]' : 'bg-white text-slate-400'}">
@@ -307,7 +327,6 @@
             const period = state.archives.find(a => a.id === currentPeriodId);
             if(!period) return;
 
-            // Pastikan periode lama memiliki limit jika belum ada (migrasi data lama)
             if(!period.budgetLimit) period.budgetLimit = state.defaultBudgetLimit || 125000;
 
             document.getElementById('periodInput').value = period.period || "";
@@ -407,13 +426,11 @@
         function addMasterEmployee() { state.employees.push({ id: 'emp_' + Date.now(), name: 'PEGAWAI BARU' }); save(); renderMasterData(); render(); }
         function deleteMasterEmployee(idx) { if(confirm('Hapus pegawai?')) { state.employees.splice(idx, 1); save(); renderMasterData(); render(); } }
         
-        // UPDATE LIMIT HANYA UNTUK PERIODE AKTIF
         function updateLimit(val) { 
             const period = state.archives.find(a => a.id === currentPeriodId);
             const numVal = parseInt(val) || 0;
             if(period) {
                 period.budgetLimit = numVal;
-                // Update default agar periode baru berikutnya pakai limit ini
                 state.defaultBudgetLimit = numVal; 
             }
             save(); render(); 
@@ -446,13 +463,12 @@
         function addNewPeriod() {
             const name = prompt("Nama Periode (Contoh: MINGGU 2):");
             if(name) {
-                // Saat buat periode baru, salin budget limit saat ini ke dalam objek archives tersebut
                 const n = { 
                     id: Date.now(), 
                     period: name.toUpperCase(), 
                     month: 'BARU', 
                     data: {},
-                    budgetLimit: state.defaultBudgetLimit // Simpan secara permanen di periode ini
+                    budgetLimit: state.defaultBudgetLimit 
                 };
                 state.archives.unshift(n); currentPeriodId = n.id;
                 save(); render(); renderMasterData();
