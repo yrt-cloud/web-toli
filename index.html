@@ -98,6 +98,22 @@
         .card-shadow {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            object-fit: cover;
+            background-color: var(--teal-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 14px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -224,7 +240,7 @@
     <datalist id="itemsDatalist"></datalist>
 
     <script>
-        const STORAGE_KEY = 'extra_food_v57_data';
+        const STORAGE_KEY = 'extra_food_v58_data';
         const DAYS = ['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT'];
         
         let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
@@ -234,7 +250,7 @@
                 { id: 2, name: 'SNACK BOX', price: 15000 },
                 { id: 3, name: 'KOPI GULA', price: 5000 }
             ],
-            employees: [{ id: 'emp_1', name: 'EMAN SUHERMAN' }],
+            employees: [{ id: 'emp_1', name: 'EMAN SUHERMAN', photo: '' }],
             archives: [{ id: Date.now(), period: 'MINGGU 1', month: 'APRIL 2026', data: {}, budgetLimit: 125000 }],
             theme: 'light'
         };
@@ -283,7 +299,6 @@
             const currentPeriod = state.archives.find(a => a.id === currentPeriodId);
             document.getElementById('limitInput').value = currentPeriod.budgetLimit || state.defaultBudgetLimit;
             
-            // Pencarian Menu
             const qItem = (document.getElementById('searchMasterItem').value || "").toUpperCase();
             const filteredItems = state.items.filter(it => it.name.includes(qItem));
 
@@ -299,7 +314,6 @@
                 `;
             }).join('');
 
-            // Pencarian Pegawai
             const qEmp = (document.getElementById('searchMasterEmployee').value || "").toUpperCase();
             const filteredEmps = state.employees.filter(e => e.name.includes(qEmp));
 
@@ -308,7 +322,10 @@
                 const originalIdx = state.employees.findIndex(original => original.id === emp.id);
                 return `
                     <tr class="border-b border-slate-50">
-                        <td class="py-3"><input class="w-full bg-slate-50 px-3 py-1.5 rounded-lg font-bold uppercase outline-none text-[10px]" value="${emp.name}" onchange="updateMasterEmployee(${originalIdx}, this.value)" style="border: 1px solid var(--border-color); color: var(--text-main);"></td>
+                        <td class="py-3">
+                            <input class="w-full bg-slate-50 px-3 py-1.5 rounded-lg font-bold uppercase outline-none text-[10px] mb-1" placeholder="NAMA PEGAWAI" value="${emp.name}" onchange="updateMasterEmployee(${originalIdx}, 'name', this.value)" style="border: 1px solid var(--border-color); color: var(--text-main);">
+                            <input class="w-full bg-slate-50 px-3 py-1 rounded-lg text-[8px] outline-none" placeholder="URL FOTO (OPSIONAL)" value="${emp.photo || ''}" onchange="updateMasterEmployee(${originalIdx}, 'photo', this.value)" style="border: 1px solid var(--border-color); color: var(--text-muted);">
+                        </td>
                         <td class="py-3 text-center w-8"><button onclick="deleteMasterEmployee(${originalIdx})" class="text-slate-300 hover:text-red-500 font-bold">×</button></td>
                     </tr>
                 `;
@@ -344,13 +361,17 @@
                 const percentage = Math.min((total / period.budgetLimit) * 100, 100);
                 grandTotalSum += total;
 
+                const photoHTML = emp.photo 
+                    ? `<img src="${emp.photo}" class="profile-img border-2 border-white cursor-pointer" alt="${emp.name}" onclick="editQuickPhoto('${emp.id}')" onerror="this.src=''; this.onerror=null; this.outerHTML='<span class=\'profile-img cursor-pointer\' onclick=\'editQuickPhoto(\\\'${emp.id}\\\')\'>${emp.name.charAt(0)}</span>';">`
+                    : `<span class="profile-img cursor-pointer" onclick="editQuickPhoto('${emp.id}')">${emp.name.charAt(0)}</span>`;
+
                 const card = document.createElement('div');
                 card.className = "rounded-[2.5rem] border border-slate-200 p-8 bg-white card-shadow";
                 card.innerHTML = `
                     <div class="flex flex-col md:flex-row justify-between items-start mb-8 gap-6">
                         <div class="flex-1">
                             <h3 class="font-black text-2xl uppercase text-slate-900 tracking-tighter flex items-center gap-4">
-                                <span class="w-10 h-10 text-white rounded-2xl flex items-center justify-center text-xs font-black shadow-lg" style="background-color: var(--teal-primary);">${emp.name.charAt(0)}</span>
+                                ${photoHTML}
                                 ${emp.name}
                             </h3>
                             <button onclick="printDetail('${emp.id}')" class="mt-4 flex items-center gap-2 text-[8px] font-black px-4 py-2 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all uppercase tracking-widest">
@@ -422,8 +443,20 @@
             if(name) { state.items.push({ id: Date.now(), name: name.toUpperCase(), price: 0 }); save(); renderMasterData(); render(); }
         }
         function deleteMasterItem(idx) { if(confirm('Hapus menu?')) { state.items.splice(idx, 1); save(); renderMasterData(); render(); } }
-        function updateMasterEmployee(idx, val) { state.employees[idx].name = val.toUpperCase(); save(); render(); }
-        function addMasterEmployee() { state.employees.push({ id: 'emp_' + Date.now(), name: 'PEGAWAI BARU' }); save(); renderMasterData(); render(); }
+        
+        function updateMasterEmployee(idx, field, val) { 
+            state.employees[idx][field] = field === 'name' ? val.toUpperCase() : val; 
+            save(); render(); 
+        }
+        function editQuickPhoto(empId) {
+            const emp = state.employees.find(e => e.id === empId);
+            const newPhoto = prompt(`Masukkan URL Foto untuk ${emp.name}:`, emp.photo || '');
+            if (newPhoto !== null) {
+                emp.photo = newPhoto;
+                save(); render(); renderMasterData();
+            }
+        }
+        function addMasterEmployee() { state.employees.push({ id: 'emp_' + Date.now(), name: 'PEGAWAI BARU', photo: '' }); save(); renderMasterData(); render(); }
         function deleteMasterEmployee(idx) { if(confirm('Hapus pegawai?')) { state.employees.splice(idx, 1); save(); renderMasterData(); render(); } }
         
         function updateLimit(val) { 
@@ -484,6 +517,9 @@
             r.onload = (ev) => { 
                 try {
                     state = JSON.parse(ev.target.result); 
+                    if (!state.employees[0].photo && state.employees[0].photo !== "") {
+                         state.employees = state.employees.map(e => ({...e, photo: ''}));
+                    }
                     currentPeriodId = state.archives[0].id; 
                     save(); render(); renderMasterData(); applyTheme();
                 } catch(err) { alert("Format file tidak valid!"); }
